@@ -1,6 +1,7 @@
 package com.brenocosta.helpdeskapi.domain.entities;
 
 import com.brenocosta.helpdeskapi.domain.enums.Role;
+import com.brenocosta.helpdeskapi.dtos.UserDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,4 +29,11 @@ public class User {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    public User(UserDTO data) {
+        this.name = data.name();
+        this.role = data.role();
+        this.password = data.password();
+        this.email = data.email();
+    }
 }
