@@ -4,6 +4,8 @@ import com.brenocosta.helpdeskapi.domain.enums.Priority;
 import com.brenocosta.helpdeskapi.domain.enums.TicketStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -44,8 +46,10 @@ public class Ticket {
     @Column(nullable = false)
     private String sector;
 
+    @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 }

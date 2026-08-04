@@ -4,10 +4,14 @@ import com.brenocosta.helpdeskapi.domain.entities.Ticket;
 import com.brenocosta.helpdeskapi.domain.entities.User;
 import com.brenocosta.helpdeskapi.domain.enums.Role;
 import com.brenocosta.helpdeskapi.domain.enums.TicketStatus;
-import com.brenocosta.helpdeskapi.dtos.TicketDTO;
+import com.brenocosta.helpdeskapi.dtos.ticket.TicketDTO;
+import com.brenocosta.helpdeskapi.dtos.ticket.UpdateStatusTicketDTO;
+import com.brenocosta.helpdeskapi.dtos.ticket.UpdateTicketDTO;
 import com.brenocosta.helpdeskapi.repositories.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class TicketService {
@@ -39,4 +43,71 @@ public class TicketService {
         return repository.save(newTicket);
     }
 
+    public List<Ticket> findAll() {
+        return this.repository.findAll();
+    }
+
+    public Ticket findTicketById(Long id) throws Exception {
+        return this.repository.findById(id).orElseThrow(() -> new Exception("Ticket não encontrado"));
+    }
+
+    public TicketStatus verifyTicketStatus(Long id) throws Exception {
+        Ticket ticket = this.findTicketById(id);
+
+
+        TicketStatus status = ticket.getStatus();
+
+        return status;
+    }
+
+    public Ticket updateTicket(UpdateTicketDTO dto, Long id) throws Exception{
+
+        Ticket ticket = findTicketById(id);
+
+        if (ticket.getStatus() == TicketStatus.CLOSED) {
+            throw new IllegalStateException("Não é possível editar um ticket fechado.");
+        }
+
+        if (dto.title() != null) {
+            ticket.setTitle(dto.title());
+        }
+
+        if (dto.description() != null) {
+            ticket.setDescription(dto.description());
+        }
+
+        if (dto.sector() != null) {
+            ticket.setSector(dto.sector());
+        }
+
+        return repository.save(ticket);
+
+    }
+
+    public Ticket updateStatusTicket(UpdateStatusTicketDTO dto, Long id) throws Exception {
+        Ticket ticket = findTicketById(id);
+
+        TicketStatus current = ticket.getStatus();
+        TicketStatus next = dto.status();
+
+        if (current == next) {
+            throw new IllegalStateException("O ticket já está nesse status.");
+        }
+
+        if (current == TicketStatus.CLOSED && next == TicketStatus.IN_PROGRESS) {
+            throw new IllegalStateException(
+                    "Primeiro reabra o ticket."
+            );
+        }
+
+        if (current == TicketStatus.OPEN && next == TicketStatus.CLOSED) {
+            throw new IllegalStateException(
+                    "O ticket deve estar em andamento antes de ser fechado."
+            );
+        }
+
+        ticket.setStatus(next);
+
+        return repository.save(ticket);
+    }
 }
