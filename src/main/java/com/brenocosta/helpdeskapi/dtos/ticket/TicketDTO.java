@@ -1,4 +1,4 @@
-package com.brenocosta.helpdeskapi.dtos;
+package com.brenocosta.helpdeskapi.dtos.ticket;
 
 import com.brenocosta.helpdeskapi.domain.enums.Priority;
 import jakarta.validation.constraints.NotBlank;
