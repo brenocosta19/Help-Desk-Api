@@ -2,9 +2,8 @@ package com.brenocosta.helpdeskapi.controllers;
 
 
 import com.brenocosta.helpdeskapi.domain.entities.User;
-import com.brenocosta.helpdeskapi.dtos.UserDTO;
+import com.brenocosta.helpdeskapi.dtos.user.UserDTO;
 import com.brenocosta.helpdeskapi.services.UserService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

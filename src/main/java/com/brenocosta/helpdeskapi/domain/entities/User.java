@@ -1,7 +1,7 @@
 package com.brenocosta.helpdeskapi.domain.entities;
 
 import com.brenocosta.helpdeskapi.domain.enums.Role;
-import com.brenocosta.helpdeskapi.dtos.UserDTO;
+import com.brenocosta.helpdeskapi.dtos.user.UserDTO;
 import jakarta.persistence.*;
 import lombok.*;
 

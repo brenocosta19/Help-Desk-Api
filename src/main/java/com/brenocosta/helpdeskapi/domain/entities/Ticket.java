@@ -8,6 +8,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "tickets")
 @Table(name = "tickets")
@@ -45,6 +47,13 @@ public class Ticket {
 
     @Column(nullable = false)
     private String sector;
+
+    @OneToMany(
+            mappedBy = "ticket",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Comment> comments = new ArrayList<>();
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)

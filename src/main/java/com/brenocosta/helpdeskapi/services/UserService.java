@@ -1,14 +1,12 @@
 package com.brenocosta.helpdeskapi.services;
 
 import com.brenocosta.helpdeskapi.domain.entities.User;
-import com.brenocosta.helpdeskapi.dtos.UserDTO;
+import com.brenocosta.helpdeskapi.dtos.user.UserDTO;
 import com.brenocosta.helpdeskapi.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {

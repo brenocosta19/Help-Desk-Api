@@ -4,7 +4,7 @@ import com.brenocosta.helpdeskapi.domain.entities.Ticket;
 import com.brenocosta.helpdeskapi.domain.entities.User;
 import com.brenocosta.helpdeskapi.domain.enums.Role;
 import com.brenocosta.helpdeskapi.domain.enums.TicketStatus;
-import com.brenocosta.helpdeskapi.dtos.ticket.TicketDTO;
+import com.brenocosta.helpdeskapi.dtos.ticket.CreateTicketDTO;
 import com.brenocosta.helpdeskapi.dtos.ticket.UpdateStatusTicketDTO;
 import com.brenocosta.helpdeskapi.dtos.ticket.UpdateTicketDTO;
 import com.brenocosta.helpdeskapi.repositories.TicketRepository;
@@ -23,7 +23,7 @@ public class TicketService {
     private TicketRepository repository;
 
 
-    public Ticket createTicket(TicketDTO ticket) throws Exception {
+    public Ticket createTicket(CreateTicketDTO ticket) throws Exception {
         User client = userService.findUserById(ticket.clientId());
 
         if (client.getRole() != Role.CLIENT) {
