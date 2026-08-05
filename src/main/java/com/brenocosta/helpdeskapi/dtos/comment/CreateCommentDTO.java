@@ -1,14 +1,10 @@
-package com.brenocosta.helpdeskapi.dtos;
+package com.brenocosta.helpdeskapi.dtos.comment;
 
-import com.brenocosta.helpdeskapi.domain.entities.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public record CommentDTO(
-
-        @NotNull
-        Long ticketId,
+public record CreateCommentDTO(
 
         @NotNull
         Long ownerId,
