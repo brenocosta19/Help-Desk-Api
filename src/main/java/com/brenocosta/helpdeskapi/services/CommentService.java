@@ -4,7 +4,7 @@ import com.brenocosta.helpdeskapi.domain.entities.Comment;
 import com.brenocosta.helpdeskapi.domain.entities.Ticket;
 import com.brenocosta.helpdeskapi.domain.entities.User;
 import com.brenocosta.helpdeskapi.domain.enums.TicketStatus;
-import com.brenocosta.helpdeskapi.dtos.CommentDTO;
+import com.brenocosta.helpdeskapi.dtos.comment.CreateCommentDTO;
 import com.brenocosta.helpdeskapi.repositories.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,10 +20,10 @@ public class CommentService {
 
     @Autowired TicketService ticketService;
 
-    public Comment makeComment(CommentDTO comment) throws Exception {
+    public Comment createComment(CreateCommentDTO comment, Long id) throws Exception {
         User owner = userService.findUserById(comment.ownerId());
 
-        Ticket ticket = ticketService.findTicketById(comment.ticketId());
+        Ticket ticket = ticketService.findTicketById(id);
 
         if (ticket.getStatus() == TicketStatus.CLOSED) {
             throw new IllegalStateException("Ticket fechado ! Não é possível fazer comentários");
@@ -39,7 +39,5 @@ public class CommentService {
 
 
     }
-
-
 
 }
