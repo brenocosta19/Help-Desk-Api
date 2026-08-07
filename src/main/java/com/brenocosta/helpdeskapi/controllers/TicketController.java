@@ -1,9 +1,7 @@
 package com.brenocosta.helpdeskapi.controllers;
 
 import com.brenocosta.helpdeskapi.domain.entities.Ticket;
-import com.brenocosta.helpdeskapi.dtos.ticket.CreateTicketDTO;
-import com.brenocosta.helpdeskapi.dtos.ticket.TicketDetailsDTO;
-import com.brenocosta.helpdeskapi.dtos.ticket.TicketResponseDTO;
+import com.brenocosta.helpdeskapi.dtos.ticket.*;
 import com.brenocosta.helpdeskapi.mapper.TicketMapper;
 import com.brenocosta.helpdeskapi.services.TicketService;
 import jakarta.validation.Valid;
@@ -43,5 +41,26 @@ public class TicketController {
         Ticket newTicket = service.createTicket(ticket);
 
         return new ResponseEntity<>(mapper.toDetails(newTicket), HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<TicketResponseDTO> updateTicket(@PathVariable Long id, @Valid @RequestBody UpdateTicketDTO ticket) throws Exception {
+        Ticket updatedTicket = service.updateTicket(ticket, id);
+
+        return new ResponseEntity<>(mapper.toResponse(updatedTicket), HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<TicketResponseDTO> updateTicketStatus(@PathVariable Long id, @Valid @RequestBody UpdateStatusTicketDTO ticket) throws Exception {
+        Ticket updatedTicketStatus = service.updateStatusTicket(ticket, id);
+
+        return new ResponseEntity<>(mapper.toResponse(updatedTicketStatus), HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}/assign")
+    public ResponseEntity<TicketResponseDTO> updateTicketStatus(@PathVariable Long id, @Valid @RequestBody AssignTechnicianDTO technician) throws Exception {
+        Ticket assignedTechnicianTicket = service.assignTechnician(technician, id);
+
+        return new ResponseEntity<>(mapper.toResponse(assignedTechnicianTicket), HttpStatus.OK);
     }
 }

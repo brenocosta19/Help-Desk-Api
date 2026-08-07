@@ -4,6 +4,7 @@ import com.brenocosta.helpdeskapi.domain.entities.Ticket;
 import com.brenocosta.helpdeskapi.domain.entities.User;
 import com.brenocosta.helpdeskapi.domain.enums.Role;
 import com.brenocosta.helpdeskapi.domain.enums.TicketStatus;
+import com.brenocosta.helpdeskapi.dtos.ticket.AssignTechnicianDTO;
 import com.brenocosta.helpdeskapi.dtos.ticket.CreateTicketDTO;
 import com.brenocosta.helpdeskapi.dtos.ticket.UpdateStatusTicketDTO;
 import com.brenocosta.helpdeskapi.dtos.ticket.UpdateTicketDTO;
@@ -106,7 +107,39 @@ public class TicketService {
             );
         }
 
+        if (current == TicketStatus.OPEN && next == TicketStatus.IN_PROGRESS && ticket.getTechnician() == null) {
+            throw new IllegalStateException("Para colocar o ticket em andamento, é necessário atribuir um técnico.");
+        }
+
         ticket.setStatus(next);
+
+        return repository.save(ticket);
+    }
+
+    public Ticket assignTechnician(AssignTechnicianDTO dto, Long id ) throws Exception {
+        Ticket ticket = findTicketById(id);
+
+        if (ticket.getStatus() == TicketStatus.CLOSED) {
+            throw new IllegalStateException(
+                    "Não é possível atribuir um técnico a um ticket fechado."
+            );
+        }
+
+        if (ticket.getTechnician() != null) {
+            throw new IllegalStateException(
+                    "Ticket já possui um técnico."
+            );
+        }
+
+        User user = userService.findUserById(dto.technicianId());
+
+        if (user.getRole() != Role.TECHNICIAN) {
+            throw new IllegalStateException(
+                    "Usuário não é um técnico."
+            );
+        }
+
+        ticket.setTechnician(user);
 
         return repository.save(ticket);
     }
