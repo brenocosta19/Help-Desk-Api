@@ -4,8 +4,8 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
-    password: brenostudio
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
 
   jpa:
     hibernate:
@@ -17,4 +17,5 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
 jwt:
-  secret: your-256-bit-secret-key-here-make-it-at-least-32-bytes-long
+  expiration: ${JWT_EXPIRATION:900000}
+  key: ${JWT_KEY:Mnt0A7M1mb0g0r52K36sHyThTOwA5UjrndXeMHZofk06tRHSEYPgELPLbTIxBfOdToHOvWVhhCWha14jacCgSsYTTelu4SZ5S9JLbNVVbJkauo2KCiTgCvUgpdorDfvROz6NNSca2jg3Bm6A9jaFrNIHlfwUD678atJkwJQW11qM61P2g1gGgfb9JvH0dMTYFydJeBrluqwN0AO1cmr05gXCuXTOUUUJlhrTpycttaexE1zf7fVfMiO7IBCRE90HMLXPTXlrhNBFSPeo78qCOfL3yhKzG5bU6Xf8nuH9TzEi12ebjsayD3QcXDNVmoIERsS75YfuspVI86HuQDLXUO9K}
