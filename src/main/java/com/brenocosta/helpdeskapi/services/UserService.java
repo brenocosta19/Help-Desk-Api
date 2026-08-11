@@ -1,7 +1,6 @@
 package com.brenocosta.helpdeskapi.services;
 
 import com.brenocosta.helpdeskapi.domain.entities.User;
-import com.brenocosta.helpdeskapi.dtos.user.UserDTO;
 import com.brenocosta.helpdeskapi.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,11 +13,6 @@ public class UserService {
     @Autowired
     private UserRepository repository;
 
-    public User createUser(UserDTO data) {
-        User newUser = new User(data);
-        this.saveUser(newUser);
-        return newUser;
-    }
 
     public void saveUser(User user) {
         this.repository.save(user);

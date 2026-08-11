@@ -27,8 +27,12 @@ public class TicketService {
     public Ticket createTicket(CreateTicketDTO ticket) throws Exception {
         User client = userService.findUserById(ticket.clientId());
 
-        if (client.getRole() != Role.CLIENT) {
-            throw new Exception("O usuário informado não é um cliente.");
+        if (client.getRoles().stream()
+                .noneMatch(role -> role.getName().equals("CLIENT"))) {
+
+            throw new IllegalStateException(
+                    "O usuário informado não é um cliente."
+            );
         }
 
 
@@ -133,9 +137,11 @@ public class TicketService {
 
         User user = userService.findUserById(dto.technicianId());
 
-        if (user.getRole() != Role.TECHNICIAN) {
+        if (user.getRoles().stream()
+                .noneMatch(role -> role.getName().equals("CLIENT"))) {
+
             throw new IllegalStateException(
-                    "Usuário não é um técnico."
+                    "O usuário informado não é um cliente."
             );
         }
 
