@@ -2,7 +2,9 @@ package com.brenocosta.helpdeskapi.controllers;
 
 
 import com.brenocosta.helpdeskapi.domain.entities.User;
+import com.brenocosta.helpdeskapi.dtos.auth.TokenResponseDTO;
 import com.brenocosta.helpdeskapi.dtos.auth.UserAuthResponseDTO;
+import com.brenocosta.helpdeskapi.dtos.auth.UserLoginDTO;
 import com.brenocosta.helpdeskapi.dtos.auth.UserRegisterDTO;
 import com.brenocosta.helpdeskapi.dtos.user.UserSummaryDTO;
 import com.brenocosta.helpdeskapi.mapper.UserMapper;
@@ -27,5 +29,10 @@ public class AuthController {
         User user = authService.register(dto);
 
         return new ResponseEntity<>(mapper.toResponse(user), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public TokenResponseDTO login(@RequestBody @Valid UserLoginDTO dto) throws Exception {
+       return authService.login(dto);
     }
 }

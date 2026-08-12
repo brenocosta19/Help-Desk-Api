@@ -28,7 +28,7 @@ public class TicketService {
         User client = userService.findUserById(ticket.clientId());
 
         if (client.getRoles().stream()
-                .noneMatch(role -> role.getName().equals("CLIENT"))) {
+                .noneMatch(role -> role.getName().equals("ROLE_CLIENT"))) {
 
             throw new IllegalStateException(
                     "O usuário informado não é um cliente."
