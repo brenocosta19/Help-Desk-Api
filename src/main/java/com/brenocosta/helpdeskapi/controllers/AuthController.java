@@ -6,7 +6,6 @@ import com.brenocosta.helpdeskapi.dtos.auth.TokenResponseDTO;
 import com.brenocosta.helpdeskapi.dtos.auth.UserAuthResponseDTO;
 import com.brenocosta.helpdeskapi.dtos.auth.UserLoginDTO;
 import com.brenocosta.helpdeskapi.dtos.auth.UserRegisterDTO;
-import com.brenocosta.helpdeskapi.dtos.user.UserSummaryDTO;
 import com.brenocosta.helpdeskapi.mapper.UserMapper;
 import com.brenocosta.helpdeskapi.services.AuthService;
 import jakarta.validation.Valid;
