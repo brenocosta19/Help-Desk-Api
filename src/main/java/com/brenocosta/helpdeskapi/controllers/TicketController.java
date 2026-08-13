@@ -58,7 +58,7 @@ public class TicketController {
     }
 
     @PatchMapping("/{id}/assign")
-    public ResponseEntity<TicketResponseDTO> updateTicketStatus(@PathVariable Long id, @Valid @RequestBody AssignTechnicianDTO technician) throws Exception {
+    public ResponseEntity<TicketResponseDTO> assignTechnician(@PathVariable Long id, @Valid @RequestBody AssignTechnicianDTO technician) throws Exception {
         Ticket assignedTechnicianTicket = service.assignTechnician(technician, id);
 
         return new ResponseEntity<>(mapper.toResponse(assignedTechnicianTicket), HttpStatus.OK);
