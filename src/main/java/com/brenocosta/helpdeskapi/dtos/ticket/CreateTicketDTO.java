@@ -7,8 +7,6 @@ import jakarta.validation.constraints.Size;
 
 public record CreateTicketDTO(
 
-        @NotNull
-        Long clientId,
 
         @Size(min = 5, max = 100)
         @NotBlank

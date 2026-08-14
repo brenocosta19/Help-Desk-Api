@@ -2,19 +2,22 @@ package com.brenocosta.helpdeskapi.services;
 
 import com.brenocosta.helpdeskapi.domain.entities.Ticket;
 import com.brenocosta.helpdeskapi.domain.entities.User;
-import com.brenocosta.helpdeskapi.domain.enums.Role;
 import com.brenocosta.helpdeskapi.domain.enums.TicketStatus;
 import com.brenocosta.helpdeskapi.dtos.ticket.AssignTechnicianDTO;
 import com.brenocosta.helpdeskapi.dtos.ticket.CreateTicketDTO;
 import com.brenocosta.helpdeskapi.dtos.ticket.UpdateStatusTicketDTO;
 import com.brenocosta.helpdeskapi.dtos.ticket.UpdateTicketDTO;
 import com.brenocosta.helpdeskapi.repositories.TicketRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class TicketService {
 
     @Autowired
@@ -23,18 +26,14 @@ public class TicketService {
     @Autowired
     private TicketRepository repository;
 
+    private final AuthService authService;
+
+
+
 
     public Ticket createTicket(CreateTicketDTO ticket) throws Exception {
-        User client = userService.findUserById(ticket.clientId());
 
-        if (client.getRoles().stream()
-                .noneMatch(role -> role.getName().equals("ROLE_CLIENT"))) {
-
-            throw new IllegalStateException(
-                    "O usuário informado não é um cliente."
-            );
-        }
-
+        User client = authService.getAuthenticatedUser();
 
         Ticket newTicket = new Ticket();
 
@@ -49,11 +48,51 @@ public class TicketService {
     }
 
     public List<Ticket> findAll() {
-        return this.repository.findAll();
+        User user = authService.getAuthenticatedUser();
+
+        boolean isAdmin = user.getRoles().stream()
+                .anyMatch(role ->
+                        role.getName().equals("ROLE_ADMIN"));
+
+        if (isAdmin) {
+            return repository.findAll();
+        }
+
+        return repository.findByClientOrTechnician(user, user);
     }
 
     public Ticket findTicketById(Long id) throws Exception {
-        return this.repository.findById(id).orElseThrow(() -> new Exception("Ticket não encontrado"));
+
+        User user = authService.getAuthenticatedUser();
+
+        Ticket ticket = repository.findById(id)
+                .orElseThrow(() ->
+                        new Exception("Ticket não encontrado"));
+
+        boolean isAdmin = user.getRoles().stream()
+                .anyMatch(role ->
+                        role.getName().equals("ROLE_ADMIN"));
+
+        if (isAdmin) {
+            return ticket;
+        }
+
+        boolean isClient = ticket.getClient()
+                .getId()
+                .equals(user.getId());
+
+        boolean isTechnician = ticket.getTechnician() != null
+                && ticket.getTechnician()
+                .getId()
+                .equals(user.getId());
+
+        if (isClient || isTechnician) {
+            return ticket;
+        }
+
+        throw new AccessDeniedException(
+                "Você não possui acesso a este ticket."
+        );
     }
 
     public TicketStatus verifyTicketStatus(Long id) throws Exception {
@@ -95,6 +134,8 @@ public class TicketService {
         TicketStatus current = ticket.getStatus();
         TicketStatus next = dto.status();
 
+        User user = authService.getAuthenticatedUser();
+
         if (current == next) {
             throw new IllegalStateException("O ticket já está nesse status.");
         }
@@ -113,6 +154,18 @@ public class TicketService {
 
         if (current == TicketStatus.OPEN && next == TicketStatus.IN_PROGRESS && ticket.getTechnician() == null) {
             throw new IllegalStateException("Para colocar o ticket em andamento, é necessário atribuir um técnico.");
+        }
+
+        boolean isClient = user.getRoles().stream()
+                .anyMatch(role -> role.getName().equals("ROLE_CLIENT"));
+
+        if (current == TicketStatus.IN_PROGRESS
+                && next == TicketStatus.CLOSED
+                && isClient) {
+
+            throw new AccessDeniedException(
+                    "Um cliente não pode fechar o ticket."
+            );
         }
 
         ticket.setStatus(next);
@@ -138,10 +191,34 @@ public class TicketService {
         User user = userService.findUserById(dto.technicianId());
 
         if (user.getRoles().stream()
-                .noneMatch(role -> role.getName().equals("CLIENT"))) {
+                .noneMatch(role -> role.getName().equals("ROLE_TECHNICIAN"))) {
 
             throw new IllegalStateException(
-                    "O usuário informado não é um cliente."
+                    "O usuário informado não é um técnico."
+            );
+        }
+
+
+        ticket.setTechnician(user);
+
+        return repository.save(ticket);
+    }
+
+    public Ticket assignMeTechnician(Long id) throws Exception {
+        User user = authService.getAuthenticatedUser();
+
+        Ticket ticket = repository.findById(id).orElseThrow(() ->
+                new Exception("Ticket não encontrado"));
+
+        if (ticket.getStatus() == TicketStatus.CLOSED) {
+            throw new IllegalStateException(
+                    "Não é possível assumir um ticket fechado."
+            );
+        }
+
+        if (ticket.getTechnician() != null) {
+            throw new IllegalStateException(
+                    "Ticket já possui um técnico."
             );
         }
 

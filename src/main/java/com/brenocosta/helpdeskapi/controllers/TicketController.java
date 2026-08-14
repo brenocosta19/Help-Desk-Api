@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,11 +24,13 @@ public class TicketController {
     @Autowired
     private TicketMapper mapper;
 
+
     @GetMapping
     public ResponseEntity<List<TicketResponseDTO>> findAll() {
         List<Ticket> tickets = service.findAll();
         return new ResponseEntity<>(mapper.toResponse(tickets), HttpStatus.OK);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<TicketDetailsDTO> listById (@Valid @PathVariable Long id) throws Exception {
@@ -36,12 +39,15 @@ public class TicketController {
         return new ResponseEntity<>(mapper.toDetails(ticket), HttpStatus.OK);
     }
 
+
+    @PreAuthorize("hasRole('CLIENT')")
     @PostMapping
     public ResponseEntity<TicketDetailsDTO> createTicket(@Valid @RequestBody CreateTicketDTO ticket) throws Exception {
         Ticket newTicket = service.createTicket(ticket);
 
         return new ResponseEntity<>(mapper.toDetails(newTicket), HttpStatus.CREATED);
     }
+
 
     @PatchMapping("/{id}")
     public ResponseEntity<TicketResponseDTO> updateTicket(@PathVariable Long id, @Valid @RequestBody UpdateTicketDTO ticket) throws Exception {
@@ -57,10 +63,21 @@ public class TicketController {
         return new ResponseEntity<>(mapper.toResponse(updatedTicketStatus), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}/assign")
     public ResponseEntity<TicketResponseDTO> assignTechnician(@PathVariable Long id, @Valid @RequestBody AssignTechnicianDTO technician) throws Exception {
         Ticket assignedTechnicianTicket = service.assignTechnician(technician, id);
 
         return new ResponseEntity<>(mapper.toResponse(assignedTechnicianTicket), HttpStatus.OK);
     }
+
+    @PreAuthorize("hasRole('TECHNICIAN')")
+    @PatchMapping("/{id}/assign-me")
+    public ResponseEntity<TicketResponseDTO> assignMe(@PathVariable Long id) throws Exception {
+        Ticket assignedMeTechnician = service.assignMeTechnician(id);
+
+        return new ResponseEntity<>(mapper.toResponse(assignedMeTechnician), HttpStatus.OK);
+    }
+
+
 }

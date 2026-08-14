@@ -16,6 +16,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -57,7 +59,7 @@ public class AuthService {
         return repository.save(user);
     }
 
-        public TokenResponseDTO login(UserLoginDTO dto) throws Exception {
+    public TokenResponseDTO login(UserLoginDTO dto) throws Exception {
             try {
                 Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.email(), dto.password()));
                 String token = tokenProvider.generateToken(authentication);
@@ -71,6 +73,10 @@ public class AuthService {
             }
         }
 
+    public User getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        return (User) authentication.getPrincipal();
+    }
 
 }
