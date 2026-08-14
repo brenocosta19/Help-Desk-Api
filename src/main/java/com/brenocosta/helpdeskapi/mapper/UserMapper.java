@@ -6,6 +6,8 @@ import com.brenocosta.helpdeskapi.dtos.user.UserDetailsDTO;
 import com.brenocosta.helpdeskapi.dtos.user.UserSummaryDTO;
 import org.mapstruct.Mapper;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
@@ -14,5 +16,8 @@ public interface UserMapper {
     UserDetailsDTO toDetails(User user);
 
     UserAuthResponseDTO toResponse(User user);
+
+    List<UserDetailsDTO> toDetails(List<User> users);
+
 
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -13,16 +14,18 @@ public class UserService {
     @Autowired
     private UserRepository repository;
 
-
-    public void saveUser(User user) {
-        this.repository.save(user);
-    }
-
     public User findUserById(Long id) throws Exception {
-        return this.repository.findById(id).orElseThrow(() -> new Exception("Usuário não encontrado"));
+        return repository.findById(id).orElseThrow(() -> new Exception("Usuário não encontrado"));
     }
 
     public List<User> findAll() {
         return this.repository.findAll();
     }
+
+    public Optional<User> findByEmail(String email) {
+        return repository.findByEmail(email);
+    }
+
+
+
 }
