@@ -4,6 +4,7 @@ package com.brenocosta.helpdeskapi.controllers;
 import com.brenocosta.helpdeskapi.domain.entities.Comment;
 import com.brenocosta.helpdeskapi.dtos.comment.CommentResponseDTO;
 import com.brenocosta.helpdeskapi.dtos.comment.CreateCommentDTO;
+import com.brenocosta.helpdeskapi.dtos.comment.UpdateCommentRequest;
 import com.brenocosta.helpdeskapi.mapper.CommentMapper;
 import com.brenocosta.helpdeskapi.services.CommentService;
 import jakarta.validation.Valid;
@@ -24,7 +25,14 @@ public class CommentController {
 
     @PostMapping("/tickets/{id}/comments")
     public ResponseEntity<CommentResponseDTO> createComment( @PathVariable Long id, @Valid @RequestBody CreateCommentDTO commentDTO) throws Exception {
-        Comment comment = this.service.createComment(commentDTO, id);
+        Comment comment = service.createComment(commentDTO, id);
         return new ResponseEntity<>(mapper.toResponse(comment), HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/comments/{id}")
+    public ResponseEntity<CommentResponseDTO> updateComment( @PathVariable Long id, @Valid @RequestBody UpdateCommentRequest dto) throws Exception {
+        Comment comment = service.updateComment(dto, id);
+
+        return new ResponseEntity<>(mapper.toResponse(comment), HttpStatus.OK);
     }
 }
