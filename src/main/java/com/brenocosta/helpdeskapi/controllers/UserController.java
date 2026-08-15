@@ -10,6 +10,7 @@ import com.brenocosta.helpdeskapi.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,6 +39,14 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserDetailsDTO> findUserById(@PathVariable Long id) throws Exception {
         User user = service.findUserById(id);
+
+        return new ResponseEntity<>(mapper.toDetails(user), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{id}/roles")
+    public ResponseEntity<UserDetailsDTO> updateUserRole(@PathVariable Long id, @Valid @RequestBody UpdateRoleDTO dto) throws Exception {
+        User user = service.updateRole(id, dto);
 
         return new ResponseEntity<>(mapper.toDetails(user), HttpStatus.OK);
     }
