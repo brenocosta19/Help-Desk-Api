@@ -3,11 +3,14 @@ package com.brenocosta.helpdeskapi.services;
 import com.brenocosta.helpdeskapi.domain.entities.Roles;
 import com.brenocosta.helpdeskapi.domain.entities.User;
 import com.brenocosta.helpdeskapi.dtos.user.UpdateRoleDTO;
+import com.brenocosta.helpdeskapi.dtos.user.UpdateUserBlocked;
+import com.brenocosta.helpdeskapi.dtos.user.UpdateUserStatus;
 import com.brenocosta.helpdeskapi.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -64,6 +67,35 @@ public class UserService {
 
         return repository.save(user);
     }
+
+    public User updateUserStatus(Long id, UpdateUserStatus dto) throws Exception {
+        User user = findUserById(id);
+
+        boolean isAdmin = verifyRole(id, "ROLE_ADMIN");
+
+        if (isAdmin) {
+            throw  new AccessDeniedException("Um admin não pode alterar status da conta de outro admin");
+        } else {
+            user.setEnabled(dto.enabled());
+
+            return repository.save(user);
+        }
+    }
+
+    public User updateUserBlocked(Long id, UpdateUserBlocked dto) throws Exception {
+        User user = findUserById(id);
+
+        boolean isAdmin = verifyRole(id, "ROLE_ADMIN");
+
+        if (isAdmin) {
+            throw  new AccessDeniedException("Um admin não pode alterar bloquear a conta de outro admin");
+        } else {
+            user.setAccountNonLocked(dto.blocked());
+
+            return repository.save(user);
+        }
+    }
+
 
 
 }

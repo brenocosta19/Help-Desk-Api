@@ -4,6 +4,8 @@ package com.brenocosta.helpdeskapi.controllers;
 import com.brenocosta.helpdeskapi.domain.entities.Roles;
 import com.brenocosta.helpdeskapi.domain.entities.User;
 import com.brenocosta.helpdeskapi.dtos.user.UpdateRoleDTO;
+import com.brenocosta.helpdeskapi.dtos.user.UpdateUserBlocked;
+import com.brenocosta.helpdeskapi.dtos.user.UpdateUserStatus;
 import com.brenocosta.helpdeskapi.dtos.user.UserDetailsDTO;
 import com.brenocosta.helpdeskapi.mapper.UserMapper;
 import com.brenocosta.helpdeskapi.services.UserService;
@@ -47,6 +49,22 @@ public class UserController {
     @PatchMapping("/{id}/roles")
     public ResponseEntity<UserDetailsDTO> updateUserRole(@PathVariable Long id, @Valid @RequestBody UpdateRoleDTO dto) throws Exception {
         User user = service.updateRole(id, dto);
+
+        return new ResponseEntity<>(mapper.toDetails(user), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<UserDetailsDTO> updateUserStatus(@PathVariable Long id, @Valid @RequestBody UpdateUserStatus dto) throws Exception {
+        User user = service.updateUserStatus(id, dto);
+
+        return new ResponseEntity<>(mapper.toDetails(user), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{id}/block")
+    public ResponseEntity<UserDetailsDTO> updateUserBlocked (@PathVariable Long id, @Valid @RequestBody UpdateUserBlocked dto) throws Exception {
+        User user = service.updateUserBlocked(id, dto);
 
         return new ResponseEntity<>(mapper.toDetails(user), HttpStatus.OK);
     }
