@@ -145,7 +145,7 @@ O **MapStruct** é responsável pelo mapeamento entre entidades e DTOs.
 - [x] Perfis de acesso
 - [x] Relacionamento `User ↔ Role`
 - [ ] Gerenciamento completo de usuários
-- [ ] Gerenciamento de roles
+- [x] Gerenciamento de roles
 - [ ] Desativação de usuários
 
 ### Tickets
@@ -476,31 +476,6 @@ Exemplos:
 ✓ Técnico não pode atribuir outro técnico
 ✓ Usuário não pode alterar suas próprias roles
 ```
-
----
-
-# 🗺️ Roadmap
-
-- [x] Estrutura inicial da API
-- [x] Gerenciamento de tickets
-- [x] Relacionamento entre usuários e tickets
-- [x] Sistema de comentários
-- [x] DTOs
-- [x] MapStruct
-- [x] Bean Validation
-- [x] Spring Security
-- [x] Autenticação JWT
-- [x] Roles
-- [ ] Permissions
-- [ ] Gerenciamento completo de usuários
-- [ ] Reabertura de tickets
-- [ ] Tratamento global de exceções
-- [ ] Testes unitários
-- [ ] Testes de integração
-- [ ] Migrations com Flyway
-- [ ] Dockerização
-- [ ] CI/CD
-- [ ] Deploy
 
 ---
 
