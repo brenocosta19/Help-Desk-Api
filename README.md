@@ -146,7 +146,7 @@ O **MapStruct** é responsável pelo mapeamento entre entidades e DTOs.
 - [x] Relacionamento `User ↔ Role`
 - [ ] Gerenciamento completo de usuários
 - [x] Gerenciamento de roles
-- [ ] Desativação de usuários
+- [x] Desativação de usuários
 
 ### Tickets
 
