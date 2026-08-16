@@ -6,8 +6,6 @@ import jakarta.validation.constraints.Size;
 
 public record CreateCommentDTO(
 
-        @NotNull
-        Long ownerId,
 
         @NotBlank
         @Size(min = 2, max = 1000)

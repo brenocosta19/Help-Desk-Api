@@ -26,7 +26,8 @@ public class CommentService {
     @Autowired TicketService ticketService;
 
     public Comment createComment(CreateCommentDTO comment, Long id) throws Exception {
-        User owner = userService.findUserById(comment.ownerId());
+
+        User owner = authService.getAuthenticatedUser();
 
         Ticket ticket = ticketService.findTicketById(id);
 
