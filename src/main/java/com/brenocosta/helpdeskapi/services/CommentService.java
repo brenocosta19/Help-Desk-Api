@@ -9,6 +9,7 @@ import com.brenocosta.helpdeskapi.dtos.comment.UpdateCommentRequest;
 import com.brenocosta.helpdeskapi.repositories.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -61,6 +62,24 @@ public class CommentService {
         comment.setContent(dto.content());
 
         return repository.save(comment);
+    }
+
+    public void deleteComment(Long id) throws Exception {
+        User user = authService.getAuthenticatedUser();
+
+        Comment comment = repository.findById(id).orElseThrow(() -> new Exception("Comentário não existe"));
+
+        if (comment.getTicket().getStatus() == TicketStatus.CLOSED) {
+            throw new IllegalStateException("Ticket está fechado, não é possível deletar o comentário");
+        }
+
+        boolean isOwner = comment.getOwner().getId().equals(user.getId());
+
+        if (!isOwner) {
+            throw new AccessDeniedException("Você não é o autor deste comentário.");
+        }
+
+        repository.delete(comment);
     }
 
 

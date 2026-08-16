@@ -35,4 +35,10 @@ public class CommentController {
 
         return new ResponseEntity<>(mapper.toResponse(comment), HttpStatus.OK);
     }
+
+    @DeleteMapping("/comments/{id}")
+    public ResponseEntity<Void> deleteComment( @PathVariable Long id) throws Exception {
+        service.deleteComment(id);
+        return ResponseEntity.noContent().build();
+    }
 }
