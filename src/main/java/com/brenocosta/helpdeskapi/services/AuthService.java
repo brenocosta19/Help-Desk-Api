@@ -44,7 +44,7 @@ public class AuthService {
             throw new BadRequestException("E-mail já cadastrado.");
         }
 
-        Roles clientRole = roleRepository.findByName("CLIENT")
+        Roles clientRole = roleRepository.findByName("ROLE_CLIENT")
                 .orElseThrow(() ->
                         new IllegalStateException("Role CLIENT não configurada."));
 
