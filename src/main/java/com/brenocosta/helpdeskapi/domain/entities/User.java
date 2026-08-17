@@ -3,6 +3,7 @@ package com.brenocosta.helpdeskapi.domain.entities;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -33,9 +34,11 @@ public class User implements UserDetails {
     private String password;
 
     @Column(nullable = false)
+    @ColumnDefault("true")
     private boolean enabled = true;
 
     @Column(nullable = false)
+    @ColumnDefault("true")
     private boolean accountNonLocked = true;
 
 
