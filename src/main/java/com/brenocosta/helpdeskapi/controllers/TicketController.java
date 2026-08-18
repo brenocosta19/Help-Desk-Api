@@ -5,6 +5,7 @@ import com.brenocosta.helpdeskapi.dtos.ticket.*;
 import com.brenocosta.helpdeskapi.mapper.TicketMapper;
 import com.brenocosta.helpdeskapi.services.TicketService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,13 +17,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/tickets")
+@RequiredArgsConstructor
 public class TicketController {
 
-    @Autowired
-    private TicketService service;
+    private final TicketService service;
 
-    @Autowired
-    private TicketMapper mapper;
+    private final TicketMapper mapper;
 
 
     @GetMapping

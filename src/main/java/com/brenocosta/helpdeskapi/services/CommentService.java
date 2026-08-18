@@ -23,7 +23,7 @@ public class CommentService {
 
     private final AuthService authService;
 
-    @Autowired TicketService ticketService;
+    private final TicketService ticketService;
 
     public Comment createComment(CreateCommentDTO comment, Long id) throws Exception {
 

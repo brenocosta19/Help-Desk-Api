@@ -8,6 +8,7 @@ import com.brenocosta.helpdeskapi.dtos.comment.UpdateCommentRequest;
 import com.brenocosta.helpdeskapi.mapper.CommentMapper;
 import com.brenocosta.helpdeskapi.services.CommentService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,13 +16,14 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1")
+@RequiredArgsConstructor
 public class CommentController {
 
-    @Autowired
-    private CommentService service;
 
-    @Autowired
-    private CommentMapper mapper;
+    private final CommentService service;
+
+
+    private final CommentMapper mapper;
 
     @PostMapping("/tickets/{id}/comments")
     public ResponseEntity<CommentResponseDTO> createComment( @PathVariable Long id, @Valid @RequestBody CreateCommentDTO commentDTO) throws Exception {

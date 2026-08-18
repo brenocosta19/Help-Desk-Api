@@ -20,11 +20,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TicketService {
 
-    @Autowired
-    private UserService userService;
+    private final  UserService userService;
 
-    @Autowired
-    private TicketRepository repository;
+
+    private final TicketRepository repository;
 
     private final AuthService authService;
 

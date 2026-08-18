@@ -25,8 +25,8 @@ import java.util.List;
 @RequestMapping("api/v1/users")
 public class UserController {
 
-    @Autowired
-    private UserService service;
+
+    private final UserService service;
 
     private final UserMapper mapper;
 
