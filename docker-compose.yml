@@ -7,7 +7,7 @@ services:
       - "5432:5432"
     restart: always
     environment:
-      POSTGRES_PASSWORD: brenostudio
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 
   # Database management interface
   adminer:
